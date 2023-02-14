@@ -2,10 +2,34 @@ import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper'
 import { logger } from '@prisma/sdk'
 import path from 'path'
 import { GENERATOR_NAME } from './constants'
-import { genEnum } from './helpers/genEnum'
 import { writeFileSafely } from './utils/writeFileSafely'
+import { getField, getImports } from './helpers/fields'
 
 const { version } = require('../package.json')
+
+async function generate({ dmmf, generator }: GeneratorOptions) {
+
+  const dtos = dmmf.datamodel.models.map((table) => {
+
+    const dtoCode = `import { ApiProperty } from '@nestjs/swagger';
+    ${getImports(table.fields)}
+    export class ${table.name}Dto {
+    ${table.fields
+      .map((field) => getField(field))
+      .join('\n\n')}
+    }`
+
+    return {
+      content: dtoCode,
+      location: path.join(generator.output?.value!, `${table.name}.dto.ts`),
+    }
+  })
+
+  for (let i = 0; i < dtos.length; i++) {
+    const element = dtos[i]
+    await writeFileSafely(element.location, element.content)
+  }
+}
 
 generatorHandler({
   onManifest() {
@@ -16,16 +40,5 @@ generatorHandler({
       prettyName: GENERATOR_NAME,
     }
   },
-  onGenerate: async (options: GeneratorOptions) => {
-    options.dmmf.datamodel.enums.forEach(async (enumInfo) => {
-      const tsEnum = genEnum(enumInfo)
-
-      const writeLocation = path.join(
-        options.generator.output?.value!,
-        `${enumInfo.name}.ts`,
-      )
-
-      await writeFileSafely(writeLocation, tsEnum)
-    })
-  },
+  onGenerate: generate,
 })
