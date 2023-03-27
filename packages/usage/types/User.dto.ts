@@ -9,4 +9,7 @@ export class UserDto {
   @ApiProperty()
   @IsString()
   email: string
+
+  @ApiProperty()
+  dob: any
 }
