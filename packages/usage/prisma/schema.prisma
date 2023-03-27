@@ -1,3 +1,7 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 generator custom_generator {
   provider = "node ../../node_modules/prisma-generator-nestjs-swagger-validator"
   output   = "../types"
