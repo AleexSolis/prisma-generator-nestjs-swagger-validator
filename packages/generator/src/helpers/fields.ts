@@ -56,7 +56,7 @@ export function getField(field: Field) {
     stringField += `@${validation}()\n`
   }
   stringField += `${field.name}: ${type};`
-  return stringField;
+  return stringField
 }
 
 export function getImports(fields: Array<Field>) {
@@ -64,6 +64,6 @@ export function getImports(fields: Array<Field>) {
   fields.forEach((field) => validations.add(getValidation(field.type)))
   return `import {
         ${[...validations].join(',\n')}
-      } from 'class-validator';
+      } from '@nestjs/class-validator';
     `
 }
