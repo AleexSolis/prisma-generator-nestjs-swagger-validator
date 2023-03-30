@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsNumber, IsString } from 'class-validator'
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger'
+import { IsNumber, IsString } from '@nestjs/class-validator'
 
 export class ProfileDto {
   @ApiProperty()
@@ -18,3 +18,7 @@ export class ProfileDto {
   @IsString()
   userId: string
 }
+
+export class CreateProfileDto extends OmitType(ProfileDto, ['id']) {}
+
+export class UpdateProfileDto extends PartialType(ProfileDto) {}

@@ -10,11 +10,18 @@ const { version } = require('../package.json')
 
 async function generate({ dmmf, generator }: GeneratorOptions) {
   const dtos = dmmf.datamodel.models.map((table) => {
-    const dtoCode = `import { ApiProperty } from '@nestjs/swagger';
+    const dtoCode = `import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
     ${getImports(table.fields)}
     export class ${table.name}Dto {
     ${table.fields.map((field) => getField(field)).join('\n\n')}
-    }`
+    }
+    
+    export class Create${table.name}Dto extends OmitType(${
+      table.name
+    }Dto, ['id']) {}
+
+    export class Update${table.name}Dto extends PartialType(${table.name}Dto) {}
+    `
 
     return {
       content: dtoCode,
@@ -22,15 +29,15 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
     }
   })
 
-  const classes = dmmf.datamodel.models.map((table) => {
-    const classCode = genClass(table.name)
-    return {
-      content: classCode,
-      location: path.join(generator.output?.value!, `${table.name}.ts`),
-    }
-  })
+  // const classes = dmmf.datamodel.models.map((table) => {
+  //   const classCode = genClass(table.name)
+  //   return {
+  //     content: classCode,
+  //     location: path.join(generator.output?.value!, `${table.name}.ts`),
+  //   }
+  // })
 
-  for (const element of [...dtos, ...classes]) {
+  for (const element of [...dtos]) {
     await writeFileSafely(element.location, element.content)
   }
 }
