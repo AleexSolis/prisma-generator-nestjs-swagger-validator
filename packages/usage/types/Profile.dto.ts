@@ -1,24 +1,18 @@
-import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger'
-import { IsNumber, IsString } from '@nestjs/class-validator'
-
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
+import { IsNumber, IsString } from '@nestjs/class-validator';
 export class ProfileDto {
   @ApiProperty()
   @IsNumber()
-  id: number
-
+  id: number;
   @ApiProperty()
   @IsString()
-  firstName: string
-
+  firstName: string;
   @ApiProperty()
   @IsString()
-  lastName: string
-
+  lastName: string;
   @ApiProperty()
   @IsString()
-  userId: string
+  userId: string;
 }
-
 export class CreateProfileDto extends OmitType(ProfileDto, ['id']) {}
-
 export class UpdateProfileDto extends PartialType(ProfileDto) {}
