@@ -12,7 +12,7 @@ export const writeFileSafely = async (writeLocation: string, content: any) => {
   if (fileExists) {
     const existingFile = fs.readFileSync(writeLocation, 'utf-8');
     const diff = diff3.merge(content, existingFile, existingFile);
-    console.dir(diff, { depth: null });
+    // console.dir(diff, { depth: null });
     contentToWrite = await formatFile(diff.result.join('\n'));
   } else {
     contentToWrite = await formatFile(content);
