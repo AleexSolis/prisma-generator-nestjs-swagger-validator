@@ -21,6 +21,7 @@ model User {
 
 model Profile {
   id        Int    @id @default(autoincrement())
+  // @IsRequired()
   firstName String
   lastName  String
   userId    String

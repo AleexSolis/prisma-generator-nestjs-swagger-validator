@@ -1,9 +1,9 @@
 export const genClass = (modelName: string): string => {
-  const modelNameLower = modelName.toLowerCase()
+  const modelNameLower = modelName.toLowerCase();
   return `
       import { Prisma, PrismaClient } from '@prisma/client';
   
-      export class ${modelName}Crud{
+      export class ${modelName}Service{
   
           constructor(private prisma:PrismaClient){}
   
@@ -30,5 +30,5 @@ export const genClass = (modelName: string): string => {
             return this.prisma.${modelNameLower}.delete({ where });
           }
       }
-      `
-}
+      `;
+};

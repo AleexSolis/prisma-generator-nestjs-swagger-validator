@@ -1,69 +1,78 @@
+import { isAnnotatedWith } from './annotations';
+
 interface Field {
-  kind: 'scalar' | 'object' | 'enum' | 'unsupported'
-  name: string
-  isRequired: boolean
-  isList: boolean
-  isUnique: boolean
-  isId: boolean
-  isReadOnly: boolean
-  isGenerated?: boolean
-  isUpdatedAt?: boolean
-  type: string
-  dbNames?: string[] | null
-  hasDefaultValue: boolean
+  kind: 'scalar' | 'object' | 'enum' | 'unsupported';
+  name: string;
+  isRequired: boolean;
+  isList: boolean;
+  isUnique: boolean;
+  isId: boolean;
+  isReadOnly: boolean;
+  isGenerated?: boolean;
+  isUpdatedAt?: boolean;
+  type: string;
+  dbNames?: string[] | null;
+  hasDefaultValue: boolean;
   default?:
     | {
-        name: string
-        args: any[]
+        name: string;
+        args: any[];
       }
     | string
     | boolean
-    | number
-  relationFromFields?: string[]
-  relationToFields?: any[]
-  relationOnDelete?: string
-  relationName?: string
-  documentation?: string
-  [key: string]: any
+    | number;
+  relationFromFields?: string[];
+  relationToFields?: any[];
+  relationOnDelete?: string;
+  relationName?: string;
+  documentation?: string;
+  [key: string]: any;
 }
 
-const NUMBER = ['Int']
-const STRING = ['String']
+const NUMBER = ['Int'];
+const STRING = ['String'];
 
 const getType = (type: string): string => {
   if (NUMBER.includes(type)) {
-    return 'number'
+    return 'number';
   } else if (STRING.includes(type)) {
-    return 'string'
+    return 'string';
   }
-  return 'any'
-}
+  return 'any';
+};
 
 const getValidation = (type: string): string | undefined => {
   if (NUMBER.includes(type)) {
-    return 'IsNumber'
+    return 'IsNumber';
   } else if (STRING.includes(type)) {
-    return 'IsString'
+    return 'IsString';
   }
-  return undefined
-}
+  return undefined;
+};
 
 export function getField(field: Field) {
-  let stringField = '@ApiProperty()\n'
-  const type = getType(field.type)
-  const validation = getValidation(field.type)
+  let stringField = '@ApiProperty()\n';
+  const type = getType(field.type);
+  const validation = getValidation(field.type);
   if (validation) {
-    stringField += `@${validation}()\n`
+    stringField += `@${validation}()\n`;
   }
-  stringField += `${field.name}: ${type};`
-  return stringField
+
+  if (
+    isAnnotatedWith(field, /@([a-zA-Z_]\w*\.)?[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)*$/i)
+  ) {
+    stringField += field.annotations.join('\n') + '\n';
+  }
+
+  stringField += `${field.name}: ${type};`;
+  return stringField;
 }
 
 export function getImports(fields: Array<Field>) {
-  const validations = new Set()
-  fields.forEach((field) => validations.add(getValidation(field.type)))
+  const validations = new Set();
+  fields.forEach((field) => validations.add(getValidation(field.type)));
   return `import {
         ${[...validations].join(',\n')}
       } from '@nestjs/class-validator';
-    `
+    `;
 }
