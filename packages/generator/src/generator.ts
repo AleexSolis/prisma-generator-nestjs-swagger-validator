@@ -6,6 +6,7 @@ import { writeFileSafely } from './utils/writeFileSafely';
 import { getField, getImports } from './helpers/fields';
 import { genClass } from './helpers/genClasss';
 import { isAnnotatedWith } from './helpers/annotations';
+import { genController } from './helpers/genController';
 
 const { version } = require('../package.json');
 
@@ -40,12 +41,29 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
       const classCode = genClass(table.name);
       return {
         content: classCode,
-        location: path.join(generator.output?.value!, `${table.name}.ts`),
+        location: path.join(
+          generator.output?.value!,
+          `${table.name}.service.ts`,
+        ),
       };
     })
     .filter(Boolean) as { content: string; location: string }[];
 
-  for (const element of [...dtos, ...classes]) {
+  const controllers = dmmf.datamodel.models
+    .map((table) => {
+      if (!isAnnotatedWith(table, /crud/i)) return null;
+      const controllerCode = genController(table.name);
+      return {
+        content: controllerCode,
+        location: path.join(
+          generator.output?.value!,
+          `${table.name}.controller.ts`,
+        ),
+      };
+    })
+    .filter(Boolean) as { content: string; location: string }[];
+
+  for (const element of [...dtos, ...classes, ...controllers]) {
     await writeFileSafely(element.location, element.content);
   }
 }
