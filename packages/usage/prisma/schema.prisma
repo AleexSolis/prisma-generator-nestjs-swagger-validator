@@ -15,13 +15,15 @@ datasource db {
 /// crud
 model User {
   id    Int    @id @default(autoincrement())
+  /// email
   email String @unique
+  /// readonly
   dob   DateTime
 }
 
 model Profile {
   id        Int    @id @default(autoincrement())
-  // @IsRequired()
+  /// length (3,50)
   firstName String
   lastName  String
   userId    String
