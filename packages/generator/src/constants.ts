@@ -1,16 +1,17 @@
-import { DMMF } from '@prisma/generator-helper';
 import { Field } from './helpers/fields';
 
 export const GENERATOR_NAME = 'prisma-generator-nestjs-swagger-validator';
 
-export const AnnotationDecorators: {
+interface IAnnotationDecorator {
   regexp: RegExp;
   handler: (field: Field) => {
     decorator: string;
     import?: string;
     apiPropertyProps: Object;
   };
-}[] = [
+}
+
+export const annotationDecorators: IAnnotationDecorator[] = [
   {
     regexp: /email/,
     handler: () => ({

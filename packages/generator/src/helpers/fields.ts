@@ -1,4 +1,4 @@
-import { AnnotationDecorators } from 'src/constants';
+import { annotationDecorators } from '../constants';
 import { isAnnotatedWith } from './annotations';
 
 export interface Field {
@@ -54,7 +54,7 @@ const getValidation = (type: string): string | undefined => {
 export function getField(field: Field) {
   const decorators = [];
   const classValidatorImports = [];
-  const apiPropertyProps = {};
+  let apiPropertyProps = {};
 
   const type = getType(field.type);
   const validation = getValidation(field.type);
@@ -68,27 +68,21 @@ export function getField(field: Field) {
     decorators.push('@IsDefined()\n');
   } else {
     decorators.push('@IsOptional()\n');
+    apiPropertyProps = { ...apiPropertyProps, required: false };
   }
 
-  Object.values(AnnotationDecorators).forEach((decorator) => {
+  annotationDecorators.forEach((decorator) => {
     if (isAnnotatedWith(field, decorator.regexp)) {
       const result = decorator.handler(field);
-      decorators.push(result);
+      decorators.push(result.decorator);
       if (result.import) {
         classValidatorImports.push(result.import);
       }
       if (result.apiPropertyProps) {
-        Object.assign(apiPropertyProps, result.apiPropertyProps);
+        apiPropertyProps = { ...apiPropertyProps, ...result.apiPropertyProps };
       }
     }
   });
-
-  if (isAnnotatedWith(field, /readonly/)) {
-    decorators.push(`@ApiProperty({ readonly: true })\n`);
-    decorators.push('@ReadOnly()\n');
-  } else {
-    decorators.push(`@ApiProperty()\n`);
-  }
 
   decorators.push(`@ApiProperty(${JSON.stringify(apiPropertyProps)})`);
 

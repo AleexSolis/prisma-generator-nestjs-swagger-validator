@@ -18,7 +18,7 @@ model User {
   /// email
   email String @unique
   /// readonly
-  dob   DateTime
+  dob   DateTime?
 }
 
 model Profile {
