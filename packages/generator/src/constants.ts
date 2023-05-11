@@ -1,22 +1,13 @@
-import { Field } from './helpers/fields';
+import { IAnnotationDecorator } from './types';
 
 export const GENERATOR_NAME = 'prisma-generator-nestjs-swagger-validator';
-
-interface IAnnotationDecorator {
-  regexp: RegExp;
-  handler: (field: Field) => {
-    decorator: string;
-    import?: string;
-    apiPropertyProps: Object;
-  };
-}
 
 export const annotationDecorators: IAnnotationDecorator[] = [
   {
     regexp: /email/,
     handler: () => ({
       decorator: '@IsEmail()',
-      import: 'IsEmail',
+      CVImport: 'IsEmail',
       apiPropertyProps: { type: 'string', format: 'email' },
     }),
   },
@@ -28,7 +19,7 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       const max = length?.[2];
       return {
         decorator: `@Length(${min}, ${max})`,
-        import: 'Length',
+        CVImport: 'Length',
         apiPropertyProps: { minLength: min, maxLength: max },
       };
     },
@@ -40,4 +31,36 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       apiPropertyProps: { readOnly: true },
     }),
   },
+  {
+    regexp: /positive/i,
+    handler: (field) => ({
+      decorator: '@IsPositive()',
+      CVImport: 'IsPositive',
+      apiPropertyProps: { minimum: 0 },
+    }),
+  },
 ];
+
+export const typeDecorators = {
+  String: 'IsString',
+  Boolean: 'IsBoolean',
+  Int: 'IsInt',
+  BigInt: 'IsInt',
+  Float: 'IsNumber',
+  Decimal: 'IsNumber',
+  DateTime: 'IsDate',
+  Json: 'IsJSON',
+  Bytes: 'String',
+};
+
+export const JsTypes = {
+  String: 'string',
+  Boolean: 'boolean',
+  Int: 'number',
+  BigInt: 'number',
+  Float: 'number',
+  Decimal: 'number',
+  DateTime: 'Date',
+  Json: 'object',
+  Bytes: 'string',
+};
