@@ -19,6 +19,9 @@ model User {
   email String @unique
   /// readonly
   dob   DateTime?
+  /// positive
+  age  Int?
+  role Role
 }
 
 model Profile {
@@ -46,4 +49,9 @@ enum Language {
   Go
   Python
   Cpp
+}
+
+enum Role {
+  CLIENT
+  ADMIN
 }
