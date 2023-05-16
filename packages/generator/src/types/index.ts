@@ -32,6 +32,7 @@ export interface DecoratorObject {
   apiPropertyProps?: Object;
   CVImport?: string;
   prismaImport?: string;
+  dtoImport?: string;
 }
 
 export interface IAnnotationDecorator {

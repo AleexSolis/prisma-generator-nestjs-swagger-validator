@@ -3,11 +3,12 @@ import { logger } from '@prisma/sdk';
 import path from 'path';
 import { GENERATOR_NAME } from './constants';
 import { writeFileSafely } from './utils/writeFileSafely';
-import { getField, getImports } from './helpers/fields';
 import { genClass } from './helpers/genClasss';
 import { isAnnotatedWith } from './helpers/annotations';
 import { genController } from './helpers/genController';
 import { fileToWrite } from './types';
+import { genDto } from './helpers/genDto';
+import { writeBarrelFile } from './utils/writeBarrelFile';
 
 const { version } = require('../package.json');
 
@@ -15,22 +16,7 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
   const dtos = dmmf.datamodel.models
     .map((table) => {
       if (isAnnotatedWith(table, /skip/i)) return null;
-      const dtoCode = `import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
-    ${getImports(table.fields)}
-    export class ${table.name}Dto {
-    ${table.fields
-      .map((field) => {
-        return getField(field).stringField;
-      })
-      .join('\n\n')}
-    }
-    
-    export class Create${table.name}Dto extends OmitType(${
-        table.name
-      }Dto, ['id']) {}
-
-    export class Update${table.name}Dto extends PartialType(${table.name}Dto) {}
-    `;
+      const dtoCode = genDto(table);
 
       return {
         content: dtoCode,
@@ -70,6 +56,13 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
   for (const element of [...dtos, ...classes, ...controllers]) {
     await writeFileSafely(element.location, element.content);
   }
+
+  await writeBarrelFile(
+    path.join(generator.output?.value!, 'index.ts'),
+    [...dtos, ...classes, ...controllers].map(
+      (file) => file.location.split('/').pop()!,
+    ),
+  );
 }
 
 generatorHandler({

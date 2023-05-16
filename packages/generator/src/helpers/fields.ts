@@ -2,7 +2,7 @@ import { DecoratorObject, Field } from '../types';
 import { JsTypes, annotationDecorators, typeDecorators } from '../constants';
 import { isAnnotatedWith } from './annotations';
 
-const getValidation = (field: Field): DecoratorObject => {
+const getValidation = (field: Field): DecoratorObject | null => {
   const { type, kind } = field;
 
   if (kind === 'enum') {
@@ -13,8 +13,18 @@ const getValidation = (field: Field): DecoratorObject => {
       apiPropertyProps: { enum: type },
     };
   }
+  if (kind === 'object') {
+    return {
+      decorator: `@IsObject()`,
+      CVImport: 'IsObject',
+      apiPropertyProps: { type: `${type}Dto` },
+      dtoImport: `${type}Dto`,
+    };
+  }
 
   const decorator = typeDecorators[type as keyof typeof typeDecorators];
+  if (!decorator) return null;
+
   return {
     decorator: `@${decorator}()`,
     CVImport: decorator,
@@ -25,6 +35,7 @@ export function getField(field: Field) {
   const decorators = new Set<String>();
   const classValidatorImports = new Set<String>();
   const prismaImports = new Set<String>();
+  const dtoImports = new Set<String>();
 
   let apiPropertyProps = {};
 
@@ -43,8 +54,11 @@ export function getField(field: Field) {
 
   if (typeDecorator) {
     decorators.add(typeDecorator.decorator);
+
     typeDecorator.CVImport && classValidatorImports.add(typeDecorator.CVImport);
     typeDecorator.prismaImport && prismaImports.add(typeDecorator.prismaImport);
+    typeDecorator.dtoImport && dtoImports.add(typeDecorator.dtoImport);
+
     if (typeDecorator.apiPropertyProps)
       apiPropertyProps = {
         ...apiPropertyProps,
@@ -82,17 +96,24 @@ export function getField(field: Field) {
     stringField,
     classValidatorImports: [...classValidatorImports],
     prismaImports: [...prismaImports],
+    dtoImports: [...dtoImports],
   };
 }
 
 export function getImports(fields: Array<Field>) {
   const prismaImports = new Set<String>();
   const CVImports = new Set<String>();
+  const dtoImports = new Set<String>();
 
   fields.forEach((field) => {
-    const { prismaImports: pi, classValidatorImports: cvi } = getField(field);
-    prismaImports.add(...pi);
-    CVImports.add(...cvi);
+    const {
+      prismaImports: pi,
+      classValidatorImports: cvi,
+      dtoImports: di,
+    } = getField(field);
+    cvi.forEach((cv) => CVImports.add(cv));
+    pi.forEach((pi) => prismaImports.add(pi));
+    di.forEach((di) => dtoImports.add(di));
   });
 
   return `import {
@@ -101,5 +122,9 @@ export function getImports(fields: Array<Field>) {
       import {
         ${[...prismaImports].filter(Boolean).join(',\n')}
       } from '@prisma/client';
+      ${
+        dtoImports.size > 0 &&
+        `import { ${[...dtoImports].join(', ')} } from '.';`
+      }
     `;
 }
