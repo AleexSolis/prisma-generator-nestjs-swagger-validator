@@ -1,11 +1,9 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://d31i9b8skgubvn.cloudfront.net/enterprises/company_profile/4215.PNG" width="200" alt="Nest Logo" /></a>
-  <a href="http://nestjs.com/" target="blank"><img src="https://prismalens.vercel.app/header/logo-dark.svg" width="200" alt="Nest Logo" /></a>
+  <a href="http://blackstone.studio" target="blank"><img src="https://d31i9b8skgubvn.cloudfront.net/enterprises/company_profile/4215.PNG" width="200" alt="Nest Logo" /></a>
+  <a href="http://https://www.prisma.io/" target="blank"><img src="https://prismalens.vercel.app/header/logo-dark.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
 # prisma-generator-nestjs-swagger-validator
-
-<hr/>
 
 ## Setup
 
