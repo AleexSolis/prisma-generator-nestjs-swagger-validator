@@ -22,15 +22,31 @@
 
 ## Custom validations
 
-| Type         | Usage         |
-| ------------ | ------------- |
-| **Number**   |               |
-| range values | length (3,50) |
-| **Date**     |               |
-|              |               |
-| **Array**    |               |
-|              |               |
-| **Object**   |               |
-|              |               |
-| **String**   |               |
-| length range | length (3,50) |
+| Type         | Usage             | Result               |
+| ------------ | ----------------- | -------------------- |
+| **Number**   |                   |
+| range values | length(3,50)      |
+| **Date**     |                   |
+|              |                   |
+| **Array**    |                   |
+|              |                   |
+| **Object**   |                   |
+|              |                   |
+| **String**   |                   |
+| length range | length(min,max)   | @IsLength(min,max)   |
+| boolean      | booleanString     | @IsBooleanString()   |
+| date         | dateString        | @IsDateString()      |
+| number       | numberString      | @IsNumberString()    |
+| contains     | contains(str)     | @Contains("str")     |
+| not contains | notContains(str)  | @NotContains("seed") |
+| alphanumeric | alpha             | @IsAlpha()           |
+| base64       | base64            | @IsBase64()          |
+| email        | email             | @IsEmail()           |
+| creditcard   | creditCard        | @IsCreditCard()      |
+| Json         | Json              | @IsJSON()            |
+| phoneNumber  | phoneNumber       | @IsPhoneNumber()     |
+| mongoId      | mongoId           | @IsMongoId()         |
+| url          | url               | @IsUrl()             |
+| uuid         | uuid(version)     | @IsUUID("version")   |
+| matches      | matches(/regexp/) | @Matches(/regex/)    |
+| timezone     | timezone          | @IsTimeZone()        |
