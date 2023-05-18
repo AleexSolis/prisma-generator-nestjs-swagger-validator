@@ -27,7 +27,6 @@ export const annotationDecorators: IAnnotationDecorator[] = [
   {
     regexp: /readonly/,
     handler: () => ({
-      decorator: '@ReadOnly()',
       apiPropertyProps: { readOnly: true },
     }),
   },
@@ -39,6 +38,32 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       apiPropertyProps: { minimum: 0 },
     }),
   },
+  // string
+  {
+    regexp: /booleanString/i,
+    handler: () => ({
+      decorator: '@IsBooleanString()',
+      CVImport: 'IsBooleanString',
+      apiPropertyProps: { type: 'string', format: 'boolean' },
+    }),
+  },
+  {
+    regexp: /dateString/i,
+    handler: () => ({
+      decorator: '@IsDateString()',
+      CVImport: 'IsDateString',
+      apiPropertyProps: { type: 'string', format: 'date-time' },
+    }),
+  },
+  {
+    regexp: /numberString/i,
+    handler: () => ({
+      decorator: '@IsNumberString()',
+      CVImport: 'IsNumberString',
+      apiPropertyProps: { type: 'string', format: 'number' },
+    }),
+  },
+  //
 ];
 
 export const typeDecorators = {

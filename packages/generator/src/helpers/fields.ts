@@ -48,8 +48,7 @@ export function getField(field: Field): FieldDtoPayload | null {
   const typeDecorator = getValidation(field);
 
   if (typeDecorator) {
-    decorators.add(typeDecorator.decorator);
-
+    typeDecorator.decorator && decorators.add(typeDecorator.decorator);
     typeDecorator.CVImport && classValidatorImports.add(typeDecorator.CVImport);
     typeDecorator.prismaImport && prismaImports.add(typeDecorator.prismaImport);
     typeDecorator.dtoImport && dtoImports.add(typeDecorator.dtoImport);
@@ -66,10 +65,9 @@ export function getField(field: Field): FieldDtoPayload | null {
   annotationDecorators.forEach((decorator) => {
     if (isAnnotatedWith(field, decorator.regexp)) {
       const result = decorator.handler(field);
-      decorators.add(result.decorator);
-      if (result.CVImport) {
-        classValidatorImports.add(result.CVImport);
-      }
+      if (result.decorator) decorators.add(result.decorator);
+      if (result.CVImport) classValidatorImports.add(result.CVImport);
+
       if (result.apiPropertyProps) {
         apiPropertyProps = { ...apiPropertyProps, ...result.apiPropertyProps };
       }
@@ -120,12 +118,19 @@ export function getImports(fields: Array<Field>) {
   return `import {
         ${[...CVImports].filter(Boolean).join(',\n')}
       } from 'class-validator';
-      import {
-        ${[...prismaImports].filter(Boolean).join(',\n')}
-      } from '@prisma/client';
       ${
-        dtoImports.size > 0 &&
-        `import { ${[...dtoImports].join(', ')} } from '.';`
+        prismaImports.size > 0
+          ? `
+        import {
+          ${[...prismaImports].filter(Boolean).join(',\n')}
+        } from '@prisma/client';
+        `
+          : ''
+      }
+      ${
+        dtoImports.size > 0
+          ? `import { ${[...dtoImports].join(', ')} } from '.';` // TODO add path
+          : ''
       }
     `;
 }
