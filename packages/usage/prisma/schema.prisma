@@ -18,7 +18,7 @@ model User {
   id    Int    @id @default(autoincrement())
   /// email
   email String @unique
-  /// readonly
+  /// dateString
   dob   DateTime?
   /// positive
   age  Int?

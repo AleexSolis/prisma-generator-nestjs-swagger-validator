@@ -28,7 +28,7 @@ export interface Field {
 }
 
 export interface DecoratorObject {
-  decorator: string;
+  decorator?: string;
   apiPropertyProps?: Object;
   CVImport?: string;
   prismaImport?: string;
