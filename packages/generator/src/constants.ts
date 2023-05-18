@@ -4,27 +4,6 @@ export const GENERATOR_NAME = 'prisma-generator-nestjs-swagger-validator';
 
 export const annotationDecorators: IAnnotationDecorator[] = [
   {
-    regexp: /email/,
-    handler: () => ({
-      decorator: '@IsEmail()',
-      CVImport: 'IsEmail',
-      apiPropertyProps: { type: 'string', format: 'email' },
-    }),
-  },
-  {
-    regexp: /length \(\d+,\d+\)/,
-    handler: (field) => {
-      const length = field.documentation?.match(/length \((\d+),(\d+)\)/);
-      const min = length?.[1];
-      const max = length?.[2];
-      return {
-        decorator: `@Length(${min}, ${max})`,
-        CVImport: 'Length',
-        apiPropertyProps: { minLength: min, maxLength: max },
-      };
-    },
-  },
-  {
     regexp: /readonly/,
     handler: () => ({
       apiPropertyProps: { readOnly: true },
@@ -84,6 +63,106 @@ export const annotationDecorators: IAnnotationDecorator[] = [
         CVImport: 'NotContains',
       };
     },
+  },
+  {
+    regexp: /alpha/,
+    handler: () => ({
+      decorator: '@IsAlpha()',
+      CVImport: 'IsAlpha',
+    }),
+  },
+  {
+    regexp: /base64/,
+    handler: () => ({
+      decorator: '@IsBase64()',
+      CVImport: 'IsBase64',
+    }),
+  },
+  {
+    regexp: /email/,
+    handler: () => ({
+      decorator: '@IsEmail()',
+      CVImport: 'IsEmail',
+      apiPropertyProps: { type: 'string', format: 'email' },
+    }),
+  },
+  {
+    regexp: /creditCard/,
+    handler: () => ({
+      decorator: '@IsCreditCard()',
+      CVImport: 'IsCreditCard',
+    }),
+  },
+  {
+    regexp: /Json/i,
+    handler: () => ({
+      decorator: '@IsJSON()',
+      CVImport: 'IsJSON',
+      apiPropertyProps: { type: 'object' },
+    }),
+  },
+  {
+    regexp: /phoneNumber/i,
+    handler: () => ({
+      decorator: '@IsPhoneNumber()',
+      CVImport: 'IsPhoneNumber',
+    }),
+  },
+  {
+    regexp: /mongoId/i,
+    handler: () => ({
+      decorator: '@IsMongoId()',
+      CVImport: 'IsMongoId',
+    }),
+  },
+  {
+    regexp: /url/i,
+    handler: () => ({
+      decorator: '@IsUrl()',
+      CVImport: 'IsUrl',
+    }),
+  },
+  {
+    regexp: /uuid(\d)?/i,
+    handler: (field) => {
+      const uuid = field.documentation?.match(/uuid(\d)?/i);
+      const version = uuid?.[1];
+      return {
+        decorator: `@IsUUID(${version ? version : ''})`,
+        CVImport: 'IsUUID',
+      };
+    },
+  },
+  {
+    regexp: /length\(\d+,\d+\)/,
+    handler: (field) => {
+      const length = field.documentation?.match(/length \((\d+),(\d+)\)/);
+      const min = length?.[1];
+      const max = length?.[2];
+      return {
+        decorator: `@Length(${min}, ${max})`,
+        CVImport: 'Length',
+        apiPropertyProps: { minLength: min, maxLength: max },
+      };
+    },
+  },
+  {
+    regexp: /matches\(.*\)/,
+    handler: (field) => {
+      const matches = field.documentation?.match(/matches\((.*)\)/);
+      const regex = matches?.[1];
+      return {
+        decorator: `@Matches(${regex})`,
+        CVImport: 'Matches',
+      };
+    },
+  },
+  {
+    regexp: /timezone/i,
+    handler: () => ({
+      decorator: '@IsTimeZone()',
+      CVImport: 'IsTimeZone',
+    }),
   },
 ];
 
