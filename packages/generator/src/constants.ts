@@ -63,7 +63,28 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       apiPropertyProps: { type: 'string', format: 'number' },
     }),
   },
-  //
+  {
+    regexp: /contains\(.*\)/,
+    handler: (field) => {
+      const contains = field.documentation?.match(/contains\((.*)\)/);
+      const seed = contains?.[1];
+      return {
+        decorator: `@Contains("${seed}")`,
+        CVImport: 'Contains',
+      };
+    },
+  },
+  {
+    regexp: /notContains\(.*\)/,
+    handler: (field) => {
+      const notContains = field.documentation?.match(/notContains\((.*)\)/);
+      const seed = notContains?.[1];
+      return {
+        decorator: `@NotContains("${seed}")`,
+        CVImport: 'NotContains',
+      };
+    },
+  },
 ];
 
 export const typeDecorators = {
