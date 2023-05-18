@@ -1,4 +1,4 @@
-import { DecoratorObject, Field } from '../types';
+import { DecoratorObject, Field, FieldDtoPayload } from '../types';
 import { JsTypes, annotationDecorators, typeDecorators } from '../constants';
 import { isAnnotatedWith } from './annotations';
 
@@ -14,12 +14,7 @@ const getValidation = (field: Field): DecoratorObject | null => {
     };
   }
   if (kind === 'object') {
-    return {
-      decorator: `@IsObject()`,
-      CVImport: 'IsObject',
-      apiPropertyProps: { type: `${type}Dto` },
-      dtoImport: `${type}Dto`,
-    };
+    if (field.relationName) return null;
   }
 
   const decorator = typeDecorators[type as keyof typeof typeDecorators];
@@ -31,11 +26,11 @@ const getValidation = (field: Field): DecoratorObject | null => {
   };
 };
 
-export function getField(field: Field) {
-  const decorators = new Set<String>();
-  const classValidatorImports = new Set<String>();
-  const prismaImports = new Set<String>();
-  const dtoImports = new Set<String>();
+export function getField(field: Field): FieldDtoPayload | null {
+  const decorators = new Set<string>();
+  const classValidatorImports = new Set<string>();
+  const prismaImports = new Set<string>();
+  const dtoImports = new Set<string>();
 
   let apiPropertyProps = {};
 
@@ -64,6 +59,8 @@ export function getField(field: Field) {
         ...apiPropertyProps,
         ...typeDecorator.apiPropertyProps,
       };
+  } else {
+    return null;
   }
 
   annotationDecorators.forEach((decorator) => {
@@ -106,14 +103,18 @@ export function getImports(fields: Array<Field>) {
   const dtoImports = new Set<String>();
 
   fields.forEach((field) => {
+    const results = getField(field);
+    if (!results) return;
+
     const {
       prismaImports: pi,
       classValidatorImports: cvi,
       dtoImports: di,
-    } = getField(field);
-    cvi.forEach((cv) => CVImports.add(cv));
-    pi.forEach((pi) => prismaImports.add(pi));
-    di.forEach((di) => dtoImports.add(di));
+    } = results;
+
+    cvi && cvi.forEach((cv) => CVImports.add(cv));
+    pi && pi.forEach((pi) => prismaImports.add(pi));
+    di && di.forEach((di) => dtoImports.add(di));
   });
 
   return `import {

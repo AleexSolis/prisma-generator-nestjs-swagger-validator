@@ -8,8 +8,9 @@ ${getImports(table.fields)}
 export class ${table.name}Dto {
 ${table.fields
   .map((field) => {
-    return getField(field).stringField;
+    return getField(field)?.stringField;
   })
+  .filter(Boolean)
   .join('\n\n')}
 }
 

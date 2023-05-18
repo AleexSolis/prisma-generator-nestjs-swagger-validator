@@ -44,3 +44,10 @@ export interface fileToWrite {
   content: string;
   location: string;
 }
+
+export interface FieldDtoPayload {
+  stringField: string;
+  classValidatorImports: string[];
+  prismaImports: string[];
+  dtoImports: string[];
+}

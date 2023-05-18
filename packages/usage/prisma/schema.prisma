@@ -5,6 +5,7 @@ generator client {
 generator custom_generator {
   provider = "node ../../node_modules/prisma-generator-nestjs-swagger-validator"
   output   = "../types"
+  modules  = "true"
 }
 
 datasource db {
@@ -24,6 +25,7 @@ model User {
   role Role
 }
 
+/// crud
 model Profile {
   id        Int    @id @default(autoincrement())
   /// length (3,50)
