@@ -5,11 +5,15 @@
 
 # prisma-generator-nestjs-swagger-validator
 
+<p>This packeges generates Dtos based in your prisma model, and optionally also can generate Nestjs modules with a basic CRUD code. </p>
+
 ## Setup
 
 - Install
 
-  > `npm i prisma-generator-nestjs-swagger-validator`
+  `javascript npm i prisma-generator-nestjs-swagger-validator`
+
+  <br/>
 
 - add to prisma schema
 
@@ -42,7 +46,10 @@ We can customize the code generation annotations.
 
   > `✅ Annotations can be used on table level and field level`
 
+  <br/>
+
   - Table level annotations
+    <br/>
 
   | Annotation | Description                                  |
   | ---------- | -------------------------------------------- |
