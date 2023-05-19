@@ -3,11 +3,14 @@ import { logger } from '@prisma/sdk';
 import path from 'path';
 import { GENERATOR_NAME } from './constants';
 import { writeFileSafely } from './utils/writeFileSafely';
-import { genClass } from './helpers/genClasss';
-import { isAnnotatedWith } from './helpers/annotations';
-import { genController } from './helpers/genController';
+import {
+  genClass,
+  isAnnotatedWith,
+  genController,
+  genDto,
+  generateModule,
+} from './helpers';
 import { fileToWrite } from './types';
-import { genDto } from './helpers/genDto';
 import { writeBarrelFile } from './utils/writeBarrelFile';
 
 const { version } = require('../package.json');
@@ -32,7 +35,7 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
 
   const services = dmmf.datamodel.models
     .map((table) => {
-      if (!isAnnotatedWith(table, /crud/i)) return null;
+      if (!isAnnotatedWith(table, /crud/i) || !isModule) return null;
       const classCode = genClass(table.name);
       return {
         content: classCode,
@@ -46,7 +49,7 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
 
   const controllers = dmmf.datamodel.models
     .map((table) => {
-      if (!isAnnotatedWith(table, /crud/i)) return null;
+      if (!isAnnotatedWith(table, /crud/i) || !isModule) return null;
       const controllerCode = genController(table.name);
       return {
         content: controllerCode,
@@ -58,9 +61,25 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
     })
     .filter(Boolean) as fileToWrite[];
 
-  for (const element of [...dtos, ...services, ...controllers]) {
+  const modules = dmmf.datamodel.models
+    .map((table) => {
+      if (!isAnnotatedWith(table, /crud/i) || !isModule) return null;
+      const moduleCode = generateModule(table);
+      return {
+        content: moduleCode,
+        location: path.join(
+          generator.output?.value! + (isModule ? '/' + table.name : ''),
+          `${table.name}.module.ts`,
+        ),
+      };
+    })
+    .filter(Boolean) as fileToWrite[];
+
+  for (const element of [...dtos, ...services, ...controllers, ...modules]) {
     await writeFileSafely(element.location, element.content);
   }
+
+  if (isModule) return;
 
   await writeBarrelFile(
     path.join(generator.output?.value!, 'index.ts'),
