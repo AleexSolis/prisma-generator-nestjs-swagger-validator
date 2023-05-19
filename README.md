@@ -20,6 +20,37 @@
   }
   ```
 
+## Options
+
+We can customize the code generation annotations.
+
+- We can use annotations like this.
+
+  ```javascript
+    /// crud
+    model User {
+      id    Int    @id @default(autoincrement())
+      /// email
+      email String @unique
+      /// dateString
+      dob   DateTime?
+      /// positive
+      age  Int?
+      role Role
+    }
+  ```
+
+  > `✅ Annotations can be used on table level and field level`
+
+  - Table level annotations
+
+  | Annotation | Description                                  |
+  | ---------- | -------------------------------------------- |
+  | skip       | skips the table (doesn't generates it).      |
+  | crud       | Generates a Nestjs Module with a basic CRUD. |
+
+  - <a href="https://github.com/BlackstoneStudio/prisma-generator-nestjs-swagger-validator/blob/develop/packages/usage/prisma/schema.prisma" target="blank">check a datamodel example</a>
+
 ## Custom validations
 
 | Type         | Usage             | Result               |

@@ -1,6 +1,6 @@
 import { DecoratorObject, Field, FieldDtoPayload } from '../types';
 import { JsTypes, annotationDecorators, typeDecorators } from '../constants';
-import { isAnnotatedWith } from './annotations';
+import { isAnnotatedWith } from '../helpers/annotations';
 
 const getValidation = (field: Field): DecoratorObject | null => {
   const { type, kind } = field;

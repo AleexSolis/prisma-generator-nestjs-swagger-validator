@@ -1,4 +1,4 @@
-export const genClass = (modelName: string): string => {
+export const genService = (modelName: string): string => {
   const modelNameLower = modelName.toLowerCase();
   return `
       import { Prisma, PrismaClient } from '@prisma/client';
