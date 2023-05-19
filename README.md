@@ -88,3 +88,5 @@ We can customize the code generation annotations.
 | uuid         | uuid(version)     | @IsUUID("version")   |
 | matches      | matches(/regexp/) | @Matches(/regex/)    |
 | timezone     | timezone          | @IsTimeZone()        |
+
+required packages: class-transformer, class-validator, prisma, @nestjs/swagger

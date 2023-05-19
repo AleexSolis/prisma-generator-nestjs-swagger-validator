@@ -4,7 +4,13 @@ import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper';
 import { GENERATOR_NAME } from './constants';
 import { writeFileSafely, writeBarrelFile } from './utils';
 import { isAnnotatedWith } from './helpers';
-import { genService, genController, genDto, genModule } from './generators';
+import {
+  genService,
+  genController,
+  genDto,
+  genModule,
+  handleGenPrismaModule,
+} from './generators';
 import { fileToWrite } from './types';
 
 const { version } = require('../package.json');
@@ -69,7 +75,17 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
     })
     .filter(Boolean) as fileToWrite[];
 
-  for (const element of [...dtos, ...services, ...controllers, ...modules]) {
+  const prismaFiles = isModule
+    ? handleGenPrismaModule(generator.output?.value!)
+    : [];
+
+  for (const element of [
+    ...dtos,
+    ...services,
+    ...controllers,
+    ...modules,
+    ...prismaFiles,
+  ]) {
     await writeFileSafely(element.location, element.content);
   }
 
@@ -77,7 +93,7 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
 
   await writeBarrelFile(
     path.join(generator.output?.value!, 'index.ts'),
-    [...dtos, ...services, ...controllers].map(
+    [...dtos, ...services, ...controllers, ...prismaFiles].map(
       (file) => file.location.split('/').pop()!,
     ),
   );

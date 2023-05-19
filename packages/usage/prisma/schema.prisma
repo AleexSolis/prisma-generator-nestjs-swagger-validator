@@ -6,6 +6,7 @@ generator custom_generator {
   provider = "node ../../node_modules/prisma-generator-nestjs-swagger-validator"
   output   = "../types"
   modules  = "true"
+  // generatePrismaService = "true" TODO
 }
 
 datasource db {
