@@ -17,6 +17,28 @@ export class Create${table.name}Dto extends OmitType(${
 export class Update${table.name}Dto extends PartialType(
   OmitType(${table.name}Dto, [${updateOmitType(table)}])
 ) {}
+
+class WhereDto{
+  ${filterFields(table)}
+}
+
+class OrderDto{
+  ${orderFields(table)}
+}
+
+export class Filter${table.name}Dto {
+  @ApiProperty({ required: false })
+  where?: WhereDto;
+
+  @ApiProperty({ required: false })
+  order?: OrderDto;
+
+  @ApiProperty({ required: false })
+  skip?: number;
+
+  @ApiProperty({ required: false })
+  take?: number;
+}
 `;
 
 const tableFields = (table: DMMF.Model) =>
@@ -50,3 +72,27 @@ const updateOmitType = (table: DMMF.Model) =>
     )
     .map((f) => `'${f.name}'`)
     .join(',');
+
+const filterFields = (table: DMMF.Model) =>
+  table.fields
+    .map((field) => {
+      if (!isAnnotatedWith(field, /canFilter/i)) return null;
+      return `
+        @ApiProperty({ required: false })
+        ${field.name}?: ${field.type};
+      `;
+    })
+    .filter(Boolean)
+    .join('\n\n');
+
+const orderFields = (table: DMMF.Model) =>
+  table.fields
+    .map((field) => {
+      if (!isAnnotatedWith(field, /canOrder/i)) return null;
+      return `
+        @ApiProperty({ required: false, enum: ['asc', 'desc'], default: 'asc' })
+        ${field.name}?: 'asc' | 'desc';
+      `;
+    })
+    .filter(Boolean)
+    .join('\n\n');
