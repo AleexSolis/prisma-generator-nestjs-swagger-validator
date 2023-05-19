@@ -1,6 +1,6 @@
 import { DMMF } from '@prisma/generator-helper';
-import { getField, getImports } from './fields';
-import { isAnnotatedWith } from './annotations';
+import { isAnnotatedWith } from '../helpers';
+import { getField, getImports } from './';
 
 export const genDto = (
   table: DMMF.Model,

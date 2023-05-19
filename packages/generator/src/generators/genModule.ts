@@ -1,7 +1,7 @@
 import { DMMF } from '@prisma/generator-helper';
-import { camelCase } from './';
+import { camelCase } from '../utils';
 
-export const generateModule = (model: DMMF.Model) => {
+export const genModule = (model: DMMF.Model) => {
   const modelName = camelCase(model.name);
 
   return `import { Module } from '@nestjs/common'

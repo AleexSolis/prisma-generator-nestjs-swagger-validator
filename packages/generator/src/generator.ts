@@ -1,17 +1,11 @@
-import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper';
-import { logger } from '@prisma/sdk';
 import path from 'path';
+import { logger } from '@prisma/sdk';
+import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper';
 import { GENERATOR_NAME } from './constants';
-import { writeFileSafely } from './utils/writeFileSafely';
-import {
-  genClass,
-  isAnnotatedWith,
-  genController,
-  genDto,
-  generateModule,
-} from './helpers';
+import { writeFileSafely, writeBarrelFile } from './utils';
+import { isAnnotatedWith } from './helpers';
+import { genService, genController, genDto, genModule } from './generators';
 import { fileToWrite } from './types';
-import { writeBarrelFile } from './utils/writeBarrelFile';
 
 const { version } = require('../package.json');
 
@@ -36,7 +30,7 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
   const services = dmmf.datamodel.models
     .map((table) => {
       if (!isAnnotatedWith(table, /crud/i) || !isModule) return null;
-      const classCode = genClass(table.name);
+      const classCode = genService(table.name);
       return {
         content: classCode,
         location: path.join(
@@ -64,7 +58,7 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
   const modules = dmmf.datamodel.models
     .map((table) => {
       if (!isAnnotatedWith(table, /crud/i) || !isModule) return null;
-      const moduleCode = generateModule(table);
+      const moduleCode = genModule(table);
       return {
         content: moduleCode,
         location: path.join(
