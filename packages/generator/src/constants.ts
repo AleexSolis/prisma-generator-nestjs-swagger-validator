@@ -9,14 +9,6 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       apiPropertyProps: { readOnly: true },
     }),
   },
-  {
-    regexp: /positive/i,
-    handler: (field) => ({
-      decorator: '@IsPositive()',
-      CVImport: 'IsPositive',
-      apiPropertyProps: { minimum: 0 },
-    }),
-  },
   // string
   {
     regexp: /booleanString/i,
@@ -163,6 +155,57 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       decorator: '@IsTimeZone()',
       CVImport: 'IsTimeZone',
     }),
+  },
+  // number
+  {
+    regexp: /isDivisibleBy/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/isDivisibleBy\((.*)\)/);
+      const num = contains?.[1];
+      return {
+        decorator: `@IsDivisibleBy(${num})`,
+        CVImport: 'IsDivisibleBy',
+      };
+    },
+  },
+  {
+    regexp: /isPositive/i,
+    handler: () => ({
+      decorator: '@IsPositive()',
+      CVImport: 'IsPositive',
+      apiPropertyProps: { minimum: 0 },
+    }),
+  },
+  {
+    regexp: /isNegative/i,
+    handler: () => ({
+      decorator: '@IsNegative()',
+      CVImport: 'IsNegative',
+    }),
+  },
+  {
+    regexp: /min/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/min\((.*)\)/);
+      const num = Number(contains?.[1]);
+      return {
+        decorator: `@Min(${num})`,
+        CVImport: 'Min',
+        apiPropertyProps: { minimum: num },
+      };
+    },
+  },
+  {
+    regexp: /max/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/max\((.*)\)/);
+      const num = Number(contains?.[1]);
+      return {
+        decorator: `@Max(${num})`,
+        CVImport: 'Max',
+        apiPropertyProps: { maximum: num },
+      };
+    },
   },
 ];
 
