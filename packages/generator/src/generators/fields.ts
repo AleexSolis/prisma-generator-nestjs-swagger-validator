@@ -1,6 +1,6 @@
-import { DecoratorObject, Field, FieldDtoPayload } from '../types';
 import { JsTypes, annotationDecorators, typeDecorators } from '../constants';
 import { isAnnotatedWith } from '../helpers/annotations';
+import { DecoratorObject, Field, FieldDtoPayload } from '../types';
 
 const getValidation = (field: Field): DecoratorObject | null => {
   const { type, kind } = field;
@@ -41,23 +41,28 @@ export function getField(field: Field): FieldDtoPayload | null {
     classValidatorImports.add('IsDefined');
   } else {
     decorators.add('@IsOptional()\n');
-    apiPropertyProps = { ...apiPropertyProps, required: false };
+    Object.assign(apiPropertyProps, { required: false });
     classValidatorImports.add('IsOptional');
   }
 
   const typeDecorator = getValidation(field);
 
   if (typeDecorator) {
-    typeDecorator.decorator && decorators.add(typeDecorator.decorator);
-    typeDecorator.CVImport && classValidatorImports.add(typeDecorator.CVImport);
-    typeDecorator.prismaImport && prismaImports.add(typeDecorator.prismaImport);
-    typeDecorator.dtoImport && dtoImports.add(typeDecorator.dtoImport);
+    const {
+      decorator,
+      CVImport,
+      prismaImport,
+      dtoImport,
+      apiPropertyProps: apiProperties,
+    } = typeDecorator;
+    decorator && decorators.add(decorator);
+    CVImport && classValidatorImports.add(CVImport);
+    prismaImport && prismaImports.add(prismaImport);
+    dtoImport && dtoImports.add(dtoImport);
 
-    if (typeDecorator.apiPropertyProps)
-      apiPropertyProps = {
-        ...apiPropertyProps,
-        ...typeDecorator.apiPropertyProps,
-      };
+    if (apiProperties) {
+      Object.assign(apiPropertyProps, apiProperties);
+    }
   } else {
     return null;
   }
@@ -69,7 +74,7 @@ export function getField(field: Field): FieldDtoPayload | null {
       if (result.CVImport) classValidatorImports.add(result.CVImport);
 
       if (result.apiPropertyProps) {
-        apiPropertyProps = { ...apiPropertyProps, ...result.apiPropertyProps };
+        Object.assign(apiPropertyProps, result.apiPropertyProps);
       }
     }
   });
@@ -81,11 +86,11 @@ export function getField(field: Field): FieldDtoPayload | null {
 
   decorators.add(`@ApiProperty(${apiPropertyPropsString})`);
 
-  const stringField =
-    [...decorators].join('\n') +
-    `${field.name}${!field.isRequired ? '?' : ''}: ${
-      JsTypes[field.type as keyof typeof JsTypes] || field.type
-    };`;
+  const stringField = `
+    ${[...decorators].join('\n')}${field.name}${
+    !field.isRequired ? '?' : ''
+  }: ${JsTypes[field.type as keyof typeof JsTypes] || field.type};
+  `;
 
   return {
     stringField,
@@ -95,10 +100,20 @@ export function getField(field: Field): FieldDtoPayload | null {
   };
 }
 
+function getImportStatements(imports: Set<string>, importSource: string) {
+  return imports.size > 0
+    ? `
+      import {
+        ${[...imports].filter(Boolean).join(',\n')}
+      } from '${importSource}';
+      `
+    : '';
+}
+
 export function getImports(fields: Array<Field>) {
-  const prismaImports = new Set<String>();
-  const CVImports = new Set<String>();
-  const dtoImports = new Set<String>();
+  const prismaImports = new Set<string>();
+  const CVImports = new Set<string>();
+  const dtoImports = new Set<string>();
 
   fields.forEach((field) => {
     const results = getField(field);
@@ -115,22 +130,19 @@ export function getImports(fields: Array<Field>) {
     di && di.forEach((di) => dtoImports.add(di));
   });
 
-  return `import {
-        ${[...CVImports].filter(Boolean).join(',\n')}
-      } from 'class-validator';
-      ${
-        prismaImports.size > 0
-          ? `
-        import {
-          ${[...prismaImports].filter(Boolean).join(',\n')}
-        } from '@prisma/client';
-        `
-          : ''
-      }
-      ${
-        dtoImports.size > 0
-          ? `import { ${[...dtoImports].join(', ')} } from '.';` // TODO add path
-          : ''
-      }
-    `;
+  const CVImportStatements = getImportStatements(CVImports, 'class-validator');
+  const prismaImportStatements = getImportStatements(
+    prismaImports,
+    '@prisma/client',
+  );
+  const dtoImportStatements =
+    dtoImports.size > 0
+      ? `import { ${[...dtoImports].join(', ')} } from '.';`
+      : '';
+
+  return `
+    ${CVImportStatements}
+    ${prismaImportStatements}
+    ${dtoImportStatements}
+  `;
 }
