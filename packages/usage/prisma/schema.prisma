@@ -15,14 +15,23 @@ datasource db {
 
 /// crud
 model User {
-  id    Int    @id @default(autoincrement())
+  id    Int       @id @default(autoincrement())
   /// email
-  email String @unique
+  email String    @unique
   /// dateString
   dob   DateTime?
   /// positive
-  age  Int?
-  role Role
+  age   Int?
+  role  Role
+
+  /// isDivisibleBy(5)
+  /// max(100)
+  /// isPositive
+  number Int
+
+  /// min(0)
+  /// isNegative
+  otherNumber Int
 }
 
 /// skip
