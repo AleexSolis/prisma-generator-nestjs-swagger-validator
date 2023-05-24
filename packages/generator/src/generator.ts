@@ -11,12 +11,13 @@ import {
   genModule,
   handleGenPrismaModule,
 } from './generators';
-import { fileToWrite } from './types';
+import { fileToWrite, Config } from './types';
 
 const { version } = require('../package.json');
 
 async function generate({ dmmf, generator }: GeneratorOptions) {
-  const isModule = Boolean(generator.config.modules);
+  const config = generator.config as Config;
+  const isModule = config.modules;
 
   const dtos = dmmf.datamodel.models
     .map((table) => {
@@ -86,7 +87,12 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
     ...modules,
     ...prismaFiles,
   ]) {
-    await writeFileSafely(element.location, element.content);
+    await writeFileSafely({
+      content: element.content,
+      writeLocation: element.location,
+      preventOverWrite: config.preventOverwrite,
+      baseOutput: generator.output?.value!,
+    });
   }
 
   if (isModule) return;
