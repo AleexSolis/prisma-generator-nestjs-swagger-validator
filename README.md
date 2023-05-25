@@ -60,33 +60,35 @@ We can customize the code generation annotations.
 
 ## Custom validations
 
-| Type         | Usage             | Result               |
-| ------------ | ----------------- | -------------------- |
-| **Number**   |                   |
-| range values | length(3,50)      |
-| **Date**     |                   |
-|              |                   |
-| **Array**    |                   |
-|              |                   |
-| **Object**   |                   |
-|              |                   |
-| **String**   |                   |
-| length range | length(min,max)   | @IsLength(min,max)   |
-| boolean      | booleanString     | @IsBooleanString()   |
-| date         | dateString        | @IsDateString()      |
-| number       | numberString      | @IsNumberString()    |
-| contains     | contains(str)     | @Contains("str")     |
-| not contains | notContains(str)  | @NotContains("seed") |
-| alphanumeric | alpha             | @IsAlpha()           |
-| base64       | base64            | @IsBase64()          |
-| email        | email             | @IsEmail()           |
-| creditcard   | creditCard        | @IsCreditCard()      |
-| Json         | Json              | @IsJSON()            |
-| phoneNumber  | phoneNumber       | @IsPhoneNumber()     |
-| mongoId      | mongoId           | @IsMongoId()         |
-| url          | url               | @IsUrl()             |
-| uuid         | uuid(version)     | @IsUUID("version")   |
-| matches      | matches(/regexp/) | @Matches(/regex/)    |
-| timezone     | timezone          | @IsTimeZone()        |
-
-required packages: class-transformer, class-validator, prisma, @nestjs/swagger
+| Type                  | Usage              | Result               |
+| --------------------- | ------------------ | -------------------- |
+| **Number**            |                    |                      |
+| Divisible by          | isDivisibleBy(num) | @IsDivisibleBy(num)  |
+| Positive number       | isPositive()       | @IsPositive()        |
+| Negative number       | isNegative()       | @IsNegative()        |
+| Greater than or equal | min(num)           | @Min(num)            |
+| Less than or equal    | max(num)           | @Max(num)            |
+| **Date**              |                    |                      |
+|                       |                    |                      |
+| **Array**             |                    |                      |
+|                       |                    |                      |
+| **Object**            |                    |                      |
+|                       |                    |                      |
+| **String**            |                    |                      |
+| Length range          | length(min,max)    | @IsLength(min,max)   |
+| Boolean               | booleanString      | @IsBooleanString()   |
+| Date                  | dateString         | @IsDateString()      |
+| Number                | numberString       | @IsNumberString()    |
+| Contains              | contains(str)      | @Contains("str")     |
+| Not contains          | notContains(str)   | @NotContains("seed") |
+| Alphanumeric          | alpha              | @IsAlpha()           |
+| Base64                | base64             | @IsBase64()          |
+| Email                 | email              | @IsEmail()           |
+| Credit card           | creditCard         | @IsCreditCard()      |
+| Json                  | Json               | @IsJSON()            |
+| PhoneNumber           | phoneNumber        | @IsPhoneNumber()     |
+| MongoId               | mongoId            | @IsMongoId()         |
+| URL                   | url                | @IsUrl()             |
+| UUID                  | uuid(version)      | @IsUUID("version")   |
+| Matches               | matches(/regexp/)  | @Matches(/regex/)    |
+| Timezone              | timezone           | @IsTimeZone()        |

@@ -18,9 +18,9 @@ datasource db {
 
 /// crud
 model User {
-  id    Int    @id @default(autoincrement())
+  id    Int       @id @default(autoincrement())
   /// email
-  email String @unique
+  email String    @unique
   /// dateString
   dob   DateTime?
   /// positive
