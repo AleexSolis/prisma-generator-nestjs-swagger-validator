@@ -207,6 +207,42 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       };
     },
   },
+  {
+    regexp: /isArray/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/max\((.*)\)/);
+      const num = Number(contains?.[1]);
+      return {
+        decorator: `@IsArray`,
+        CVImport: 'IsArray',
+        apiPropertyProps: { type: 'array' },
+      };
+    },
+  },
+  {
+    regexp: /arrayMax/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/arrayMax\((.*)\)/);
+      const num = Number(contains?.[1]);
+      return {
+        decorator: `@IsArrayMax(${num})`,
+        CVImport: 'IsArrayMax',
+        apiPropertyProps: { maximum: num },
+      };
+    },
+  },
+  {
+    regexp: /arrayMin/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/arrayMin\((.*)\)/);
+      const num = Number(contains?.[1]);
+      return {
+        decorator: `@IsArrayMin(${num})`,
+        CVImport: 'IsArrayMin',
+        apiPropertyProps: { minimum: num },
+      };
+    },
+  },
 ];
 
 export const typeDecorators = {
@@ -219,6 +255,7 @@ export const typeDecorators = {
   DateTime: 'IsDate',
   Json: 'IsJSON',
   Bytes: 'String',
+  Array: 'IsArray',
 };
 
 export const JsTypes = {
@@ -231,4 +268,5 @@ export const JsTypes = {
   DateTime: 'Date',
   Json: 'object',
   Bytes: 'string',
+  Array: 'array',
 };
