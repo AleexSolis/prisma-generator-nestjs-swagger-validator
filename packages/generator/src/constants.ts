@@ -1,4 +1,5 @@
 import { IAnnotationDecorator } from './types';
+import { formatDate } from './utils';
 
 export const GENERATOR_NAME = 'prisma-generator-nestjs-swagger-validator';
 
@@ -208,6 +209,28 @@ export const annotationDecorators: IAnnotationDecorator[] = [
     },
   },
   {
+    regexp: /minDate/i,
+    handler: (field) => {
+      const date = formatDate(field);
+      return {
+        decorator: `@MinDate("${date}")`,
+        CVImport: 'MinDate',
+        apiPropertyProps: { minDate: date },
+      };
+    },
+  },
+  {
+    regexp: /maxDate/i,
+    handler: (field) => {
+      const date = formatDate(field);
+      return {
+        decorator: `@MaxDate("${date}")`,
+        CVImport: 'MaxDate',
+        apiPropertyProps: { maxDate: date },
+      };
+    },
+  },
+  {
     regexp: /isInstance/i,
     handler: (field) => {
       const contains = field.documentation?.match(/isInstance\((.*)\)/);
@@ -219,6 +242,9 @@ export const annotationDecorators: IAnnotationDecorator[] = [
     },
   },
 ];
+
+
+
 
 export const typeDecorators = {
   String: 'IsString',
