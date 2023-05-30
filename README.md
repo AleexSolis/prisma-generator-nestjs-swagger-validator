@@ -73,7 +73,7 @@ We can customize the code generation annotations.
 | **Array**               |                     |                       |
 |                         |                     |                       |
 | **Object**              |                     |                       |
-|                         |                     |                       |
+| isInstance              |isInstance(JSON)     |  isInstance(Obj)      |
 | **String**              |                     |                       |
 | Length range            | length(min,max)     | @IsLength(min,max)    |
 | Boolean                 | booleanString       | @IsBooleanString()    |
