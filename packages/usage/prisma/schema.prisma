@@ -32,6 +32,9 @@ model User {
   /// min(0)
   /// isNegative
   otherNumber Int
+
+  /// isInstance({"name":"Dario"})
+  isInstancetest Json
 }
 
 /// skip
