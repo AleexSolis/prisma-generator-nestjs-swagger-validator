@@ -60,6 +60,7 @@ We can customize the code generation annotations.
 
 ## Custom validations
 
+
 | Type                    | Usage               | Result                |
 | ----------------------- | -----------------   | --------------------- |
 | **Number**              |                     |                       |
@@ -69,7 +70,8 @@ We can customize the code generation annotations.
 | Greater than or equal   | min(num)            | @Min(num)             |
 | Less than or equal      | max(num)            | @Max(num)             |
 | **Date**                |                     |                       |
-|                         |                     |                       |
+| MinDate                 | minDate(YYYY-MM-DD) | @MinDate(date ISO)    |
+| MaxDate                 | maxDate(YYYY-MM-DD) | @MaxDate(date ISO)    |
 | **Array**               |                     |                       |
 |                         |                     |                       |
 | **Object**              |                     |                       |
