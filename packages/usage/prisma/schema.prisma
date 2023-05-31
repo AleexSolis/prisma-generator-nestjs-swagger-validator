@@ -32,6 +32,15 @@ model User {
   /// min(0)
   /// isNegative
   otherNumber Int
+
+  /// minDate(1-9-9-9-0-6-1-1) 
+  minDateTest DateTime?
+
+  /// minDate(1999061-1) 
+  minDateTest2 DateTime?
+
+  /// maxDate(1999-0611) 
+  maxDateTest DateTime?
 }
 
 /// skip
