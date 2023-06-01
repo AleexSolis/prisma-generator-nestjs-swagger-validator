@@ -60,36 +60,37 @@ We can customize the code generation annotations.
 
 ## Custom validations
 
-| Type                  | Usage               | Result               |
-| --------------------- | ------------------- | -------------------- |
-| **Number**            |                     |                      |
-| Divisible by          | isDivisibleBy(num)  | @IsDivisibleBy(num)  |
-| Positive number       | isPositive()        | @IsPositive()        |
-| Negative number       | isNegative()        | @IsNegative()        |
-| Greater than or equal | min(num)            | @Min(num)            |
-| Less than or equal    | max(num)            | @Max(num)            |
-| **Date**              |                     |                      |
-| MinDate               | minDate(YYYY-MM-DD) | @MinDate(date ISO)   |
-| MaxDate               | maxDate(YYYY-MM-DD) | @MaxDate(date ISO)   |
-| **Array**             |                     |                      |
-|                       |                     |                      |
-| **Object**            |                     |                      |
-|                       |                     |                      |
-| **String**            |                     |                      |
-| Length range          | length(min,max)     | @IsLength(min,max)   |
-| Boolean               | booleanString       | @IsBooleanString()   |
-| Date                  | dateString          | @IsDateString()      |
-| Number                | numberString        | @IsNumberString()    |
-| Contains              | contains(str)       | @Contains("str")     |
-| Not contains          | notContains(str)    | @NotContains("seed") |
-| Alphanumeric          | alpha               | @IsAlpha()           |
-| Base64                | base64              | @IsBase64()          |
-| Email                 | email               | @IsEmail()           |
-| Credit card           | creditCard          | @IsCreditCard()      |
-| Json                  | Json                | @IsJSON()            |
-| PhoneNumber           | phoneNumber         | @IsPhoneNumber()     |
-| MongoId               | mongoId             | @IsMongoId()         |
-| URL                   | url                 | @IsUrl()             |
-| UUID                  | uuid(version)       | @IsUUID("version")   |
-| Matches               | matches(/regexp/)   | @Matches(/regex/)    |
-| Timezone              | timezone            | @IsTimeZone()        |
+
+| Type                    | Usage               | Result                |
+| ----------------------- | -----------------   | --------------------- |
+| **Number**              |                     |                       |
+| Divisible by            | isDivisibleBy(num)  | @IsDivisibleBy(num)   |
+| Positive number         | isPositive()        | @IsPositive()         |
+| Negative number         | isNegative()        | @IsNegative()         |
+| Greater than or equal   | min(num)            | @Min(num)             |
+| Less than or equal      | max(num)            | @Max(num)             |
+| **Date**                |                     |                       |
+| MinDate                 | minDate(YYYY-MM-DD) | @MinDate(date ISO)    |
+| MaxDate                 | maxDate(YYYY-MM-DD) | @MaxDate(date ISO)    |
+| **Array**               |                     |                       |
+|                         |                     |                       |
+| **Object**              |                     |                       |
+| isInstance              |isInstance(JSON)     |  isInstance(Obj)      |
+| **String**              |                     |                       |
+| Length range            | length(min,max)     | @IsLength(min,max)    |
+| Boolean                 | booleanString       | @IsBooleanString()    |
+| Date                    | dateString          | @IsDateString()       |
+| Number                  | numberString        | @IsNumberString()     |
+| Contains                | contains(str)       | @Contains("str")      |
+| Not contains            | notContains(str)    | @NotContains("seed")  |
+| Alphanumeric            | alpha               | @IsAlpha()            |
+| Base64                  | base64              | @IsBase64()           |
+| Email                   | email               | @IsEmail()            |
+| Credit card             | creditCard          | @IsCreditCard()       |
+| Json                    | Json                | @IsJSON()             |
+| PhoneNumber             | phoneNumber         | @IsPhoneNumber()      |
+| MongoId                 | mongoId             | @IsMongoId()          |
+| URL                     | url                 | @IsUrl()              |
+| UUID                    | uuid(version)       | @IsUUID("version")    |
+| Matches                 | matches(/regexp/)   | @Matches(/regex/)     |
+| Timezone                | timezone            | @IsTimeZone()         |

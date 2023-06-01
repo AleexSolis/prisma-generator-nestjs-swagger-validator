@@ -230,7 +230,21 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       };
     },
   },
+  {
+    regexp: /isInstance/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/isInstance\((.*)\)/);
+      const isInstance = contains && contains[1];
+      return {
+        decorator: `@IsInstance(${isInstance})`,
+        CVImport: 'IsInstance',
+      };
+    },
+  },
 ];
+
+
+
 
 export const typeDecorators = {
   String: 'IsString',
