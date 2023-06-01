@@ -185,7 +185,7 @@ export const annotationDecorators: IAnnotationDecorator[] = [
     }),
   },
   {
-    regexp: /min/i,
+    regexp: /min\(\d+\)/i,
     handler: (field) => {
       const contains = field.documentation?.match(/min\((.*)\)/);
       const num = Number(contains?.[1]);
@@ -197,7 +197,7 @@ export const annotationDecorators: IAnnotationDecorator[] = [
     },
   },
   {
-    regexp: /max/i,
+    regexp: /max\(\d+\)/i,
     handler: (field) => {
       const contains = field.documentation?.match(/max\((.*)\)/);
       const num = Number(contains?.[1]);
@@ -242,9 +242,6 @@ export const annotationDecorators: IAnnotationDecorator[] = [
     },
   },
 ];
-
-
-
 
 export const typeDecorators = {
   String: 'IsString',
