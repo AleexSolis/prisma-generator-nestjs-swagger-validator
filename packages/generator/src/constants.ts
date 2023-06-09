@@ -255,7 +255,7 @@ export const typeDecorators = {
   Bytes: 'String',
 };
 
-export const JsTypes = {
+export const JsTypes: Record<string, string> = {
   String: 'string',
   Boolean: 'boolean',
   Int: 'number',

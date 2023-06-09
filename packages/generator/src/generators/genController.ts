@@ -15,32 +15,32 @@ export const genController = (modelName: string): string => {
         @ApiResponse({ type: ${modelName}Dto, status: 201 })
         @Post()
         async create(@Res() res: Response, @Body() create${modelName}Dto: Create${modelName}Dto) {
-            const data = this.${modelNameLower}Service.create(create${modelName}tDto);
+            const data = this.${modelNameLower}Service.create(create${modelName}Dto);
             res.send(data);
         }
 
         @ApiResponse({ type: ${modelName}Dto, status: 200, isArray: true })
         @Get()
-        findAll() {
-            return this.${modelNameLower}Service.findAll();
+        find() {
+            return this.${modelNameLower}Service.find({});
         }
 
         @ApiResponse({ type: ${modelName}Dto, status: 200 })
         @Get(':id')
         findOne(@Param('id') id: string) {
-            return this.${modelNameLower}Service.findOne(+id);
+            return this.${modelNameLower}Service.findOne({ id: id });
         }
 
         @ApiResponse({ type: ${modelName}Dto, status: 200 })
         @Patch(':id')
         update(@Param('id') id: string, @Body() update${modelName}Dto: Update${modelName}Dto) {
-            return this.${modelNameLower}Service.update(+id, update${modelName}Dto);
+            return this.${modelNameLower}Service.update({id: id}, update${modelName}Dto);
         }
 
         @ApiResponse({ type: ${modelName}Dto, status: 200 })
         @Delete(':id')
-        remove(@Param('id') id: string) {
-            return this.${modelNameLower}Service.remove(+id);
+        delete(@Param('id') id: string) {
+            return this.${modelNameLower}Service.delete({id: id});
         }
         }
         `;

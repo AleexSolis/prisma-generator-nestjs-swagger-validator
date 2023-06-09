@@ -1,6 +1,7 @@
 import { DMMF } from '@prisma/generator-helper';
 import { isAnnotatedWith } from '../helpers';
 import { getField, getImports } from './';
+import { JsTypes } from '../constants';
 
 export const genDto = (
   table: DMMF.Model,
@@ -79,7 +80,7 @@ const filterFields = (table: DMMF.Model) =>
       if (!isAnnotatedWith(field, /canFilter/i)) return null;
       return `
         @ApiProperty({ required: false })
-        ${field.name}?: ${field.type};
+        ${field.name}?: ${JsTypes[field.type] || field.type};
       `;
     })
     .filter(Boolean)

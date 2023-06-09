@@ -89,7 +89,7 @@ export function getField(field: Field): FieldDtoPayload | null {
   const stringField = `
     ${[...decorators].join('\n')}${field.name}${
     !field.isRequired ? '?' : ''
-  }: ${JsTypes[field.type as keyof typeof JsTypes] || field.type};
+  }: ${JsTypes[field.type] || field.type};
   `;
 
   return {
