@@ -1,26 +1,57 @@
 import fs from 'fs';
 import path from 'path';
 import { formatFile } from './formatFile';
-import * as diff3 from 'node-diff3';
+import { checkConflicts } from './checkConflicts';
+import { WriteFileSafelyProps } from 'src/types';
+// import * as diff3 from 'node-diff3'; TODO uninstall
 
-export const writeFileSafely = async (writeLocation: string, content: any) => {
-  let contentToWrite: string;
-
-  // Check if file exists
-  // const fileExists = fs.existsSync(writeLocation);
-
-  // if (fileExists) {
-  //   const existingFile = fs.readFileSync(writeLocation, 'utf-8');
-  //   const diff = diff3.merge(content, existingFile, existingFile);
-  //   // console.dir(diff, { depth: null });
-  //   contentToWrite = await formatFile(diff.result.join('\n'));
-  // } else {
-  contentToWrite = await formatFile(content);
-  // }
+export const writeFileSafely = async ({
+  writeLocation,
+  content,
+  preventOverWrite = false,
+  baseOutput = '',
+}: WriteFileSafelyProps) => {
+  let contentToWrite: string = await formatFile(content);
 
   fs.mkdirSync(path.dirname(writeLocation), {
     recursive: true,
   });
 
-  fs.writeFileSync(writeLocation, contentToWrite);
+  const currentExists = fs.existsSync(writeLocation);
+  if (!currentExists) {
+    fs.writeFileSync(writeLocation, contentToWrite);
+  }
+
+  if (preventOverWrite) {
+    const tempLocation = path.join(
+      baseOutput,
+      'temp',
+      writeLocation.split('/').at(-1) || '',
+    );
+    const baseLocation = path.join(
+      baseOutput,
+      'base',
+      writeLocation.split('/').at(-1) || '',
+    );
+
+    fs.mkdirSync(path.dirname(tempLocation), {
+      recursive: true,
+    });
+    fs.mkdirSync(path.dirname(baseLocation), {
+      recursive: true,
+    });
+
+    if (!fs.existsSync(baseLocation)) {
+      fs.writeFileSync(baseLocation, contentToWrite);
+      return;
+    }
+
+    fs.writeFileSync(tempLocation, contentToWrite);
+
+    await checkConflicts(writeLocation, baseLocation, tempLocation);
+
+    fs.writeFileSync(baseLocation, contentToWrite);
+    // delete temp file
+    fs.unlinkSync(tempLocation);
+  }
 };

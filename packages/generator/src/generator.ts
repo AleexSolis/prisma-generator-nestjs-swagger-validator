@@ -4,13 +4,20 @@ import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper';
 import { GENERATOR_NAME } from './constants';
 import { writeFileSafely, writeBarrelFile } from './utils';
 import { isAnnotatedWith } from './helpers';
-import { genService, genController, genDto, genModule } from './generators';
-import { fileToWrite } from './types';
+import {
+  genService,
+  genController,
+  genDto,
+  genModule,
+  handleGenPrismaModule,
+} from './generators';
+import { fileToWrite, Config } from './types';
 
 const { version } = require('../package.json');
 
 async function generate({ dmmf, generator }: GeneratorOptions) {
-  const isModule = Boolean(generator.config.modules);
+  const config = generator.config as Config;
+  const isModule = config.modules;
 
   const dtos = dmmf.datamodel.models
     .map((table) => {
@@ -69,15 +76,30 @@ async function generate({ dmmf, generator }: GeneratorOptions) {
     })
     .filter(Boolean) as fileToWrite[];
 
-  for (const element of [...dtos, ...services, ...controllers, ...modules]) {
-    await writeFileSafely(element.location, element.content);
+  const prismaFiles = isModule
+    ? handleGenPrismaModule(generator.output?.value!)
+    : [];
+
+  for (const element of [
+    ...dtos,
+    ...services,
+    ...controllers,
+    ...modules,
+    ...prismaFiles,
+  ]) {
+    await writeFileSafely({
+      content: element.content,
+      writeLocation: element.location,
+      preventOverWrite: config.preventOverwrite,
+      baseOutput: generator.output?.value!,
+    });
   }
 
   if (isModule) return;
 
   await writeBarrelFile(
     path.join(generator.output?.value!, 'index.ts'),
-    [...dtos, ...services, ...controllers].map(
+    [...dtos, ...services, ...controllers, ...prismaFiles].map(
       (file) => file.location.split('/').pop()!,
     ),
   );

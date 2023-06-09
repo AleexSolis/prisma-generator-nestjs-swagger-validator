@@ -5,7 +5,10 @@ generator client {
 generator custom_generator {
   provider = "node ../../node_modules/prisma-generator-nestjs-swagger-validator"
   output   = "../types"
-  modules  = "true"
+  modules  = true
+  // generatePrismaService = true TODO
+  preventOverwrite = true
+  tempOutput = "./output"
 }
 
 datasource db {
@@ -21,8 +24,9 @@ model User {
   /// dateString
   dob   DateTime?
   /// positive
-  age   Int?
-  role  Role
+  age  Int?
+  role Role?
+  status String
 
   /// isDivisibleBy(5)
   /// max(100)

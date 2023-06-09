@@ -51,3 +51,16 @@ export interface FieldDtoPayload {
   prismaImports: string[];
   dtoImports: string[];
 }
+
+export interface Config {
+  modules?: boolean;
+  preventOverwrite?: boolean;
+  tempOutput?: string;
+}
+
+export interface WriteFileSafelyProps {
+  writeLocation: string;
+  content: any;
+  preventOverWrite?: boolean;
+  baseOutput?: string;
+}

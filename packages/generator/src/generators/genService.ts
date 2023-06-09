@@ -1,11 +1,14 @@
 export const genService = (modelName: string): string => {
   const modelNameLower = modelName.toLowerCase();
   return `
-      import { Prisma, PrismaClient } from '@prisma/client';
-  
+      import { Injectable } from '@nestjs/common';
+      import { Prisma } from '@prisma/client';
+      import { PrismaService } from '../prisma/prisma.service';
+
+      @Injectable()
       export class ${modelName}Service{
   
-          constructor(private prisma:PrismaClient){}
+          constructor(private prisma: PrismaService){}
   
           create(data: Prisma.${modelName}CreateInput) {
             return this.prisma.${modelNameLower}.create({ data });
