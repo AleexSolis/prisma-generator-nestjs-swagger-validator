@@ -10,6 +10,85 @@ export const annotationDecorators: IAnnotationDecorator[] = [
       apiPropertyProps: { readOnly: true },
     }),
   },
+  //common
+  {
+    regexp: /defined/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/notEquals\((.*)\)/);
+      const value = contains?.[1];
+      return {
+        decorator: `@IsDefined("${value}")`,
+        CVImport: 'IsDefined',
+      }
+    }
+  },
+  {
+    regexp: /optional/i,
+    handler: () => ({
+      decorator: '@IsOptional()',
+      CVImport: 'IsOptional',
+    }),
+  },
+  {
+    regexp: /equals/i,
+    handler: (field) => {
+      const equals = field.documentation?.match(/equals\((.*)\)/);
+      const seed = equals?.[1];
+      return {
+        decorator: `@Equals("${seed}")`,
+        CVImport: 'Equals',
+      };
+    }
+  },
+  {
+    regexp: /notEquals/i,
+    handler: (field) => {
+      const notEquals = field.documentation?.match(/notEquals\((.*)\)/);
+      const seed = notEquals?.[1];
+      return {
+        decorator: `@NotEquals("${seed}")`,
+        CVImport: 'NotEquals',
+      };
+    }
+  },
+  {
+    regexp: /empty/i,
+    handler: () => ({
+      decorator: '@IsEmpty()',
+      CVImport: 'IsEmpty',
+    }),
+  },
+  {
+    regexp: /notEmpty/i,
+    handler: () => ({
+      decorator: '@IsNotEmpty()',
+      CVImport: 'IsNotEmpty',
+    }),
+  },
+  {
+    regexp: /in/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/notEquals\((.*)\)/);
+      const array = contains?.[1];
+      return {
+        decorator: `@IsIn("${array}")`,
+        CVImport: 'IsIn',
+        apiPropertyProps: { values: array },
+      }
+    }
+  },
+  {
+    regexp: /notIn/i,
+    handler: (field) => {
+      const contains = field.documentation?.match(/notEquals\((.*)\)/);
+      const array = contains?.[1];
+      return {
+        decorator: `@IsNotIn("${array}")`,
+        CVImport: 'IsNotIn',
+        apiPropertyProps: { values: array },
+      }
+    }
+  },
   // string
   {
     regexp: /booleanString/i,
