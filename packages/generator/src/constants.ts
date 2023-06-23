@@ -12,24 +12,6 @@ export const annotationDecorators: IAnnotationDecorator[] = [
   },
   //common
   {
-    regexp: /defined/i,
-    handler: (field) => {
-      const contains = field.documentation?.match(/notEquals\((.*)\)/);
-      const value = contains?.[1];
-      return {
-        decorator: `@IsDefined("${value}")`,
-        CVImport: 'IsDefined',
-      }
-    }
-  },
-  {
-    regexp: /optional/i,
-    handler: () => ({
-      decorator: '@IsOptional()',
-      CVImport: 'IsOptional',
-    }),
-  },
-  {
     regexp: /equals/i,
     handler: (field) => {
       const equals = field.documentation?.match(/equals\((.*)\)/);
@@ -38,7 +20,7 @@ export const annotationDecorators: IAnnotationDecorator[] = [
         decorator: `@Equals("${seed}")`,
         CVImport: 'Equals',
       };
-    }
+    },
   },
   {
     regexp: /notEquals/i,
@@ -49,24 +31,10 @@ export const annotationDecorators: IAnnotationDecorator[] = [
         decorator: `@NotEquals("${seed}")`,
         CVImport: 'NotEquals',
       };
-    }
+    },
   },
   {
-    regexp: /empty/i,
-    handler: () => ({
-      decorator: '@IsEmpty()',
-      CVImport: 'IsEmpty',
-    }),
-  },
-  {
-    regexp: /notEmpty/i,
-    handler: () => ({
-      decorator: '@IsNotEmpty()',
-      CVImport: 'IsNotEmpty',
-    }),
-  },
-  {
-    regexp: /in/i,
+    regexp: /^in$/i,
     handler: (field) => {
       const contains = field.documentation?.match(/notEquals\((.*)\)/);
       const array = contains?.[1];
@@ -74,11 +42,11 @@ export const annotationDecorators: IAnnotationDecorator[] = [
         decorator: `@IsIn("${array}")`,
         CVImport: 'IsIn',
         apiPropertyProps: { values: array },
-      }
-    }
+      };
+    },
   },
   {
-    regexp: /notIn/i,
+    regexp: /^notIn$/i,
     handler: (field) => {
       const contains = field.documentation?.match(/notEquals\((.*)\)/);
       const array = contains?.[1];
@@ -86,8 +54,8 @@ export const annotationDecorators: IAnnotationDecorator[] = [
         decorator: `@IsNotIn("${array}")`,
         CVImport: 'IsNotIn',
         apiPropertyProps: { values: array },
-      }
-    }
+      };
+    },
   },
   // string
   {
