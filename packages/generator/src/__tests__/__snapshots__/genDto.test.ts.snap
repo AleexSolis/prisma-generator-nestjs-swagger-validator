@@ -1,0 +1,127 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dto generation: User 1`] = `
+"import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
+import {
+        IsNotEmpty,
+IsDefined,
+IsInt,
+IsString,
+IsOptional
+      } from 'class-validator';
+      
+      
+    
+export class UserDto {
+@IsNotEmpty()
+
+@IsDefined()
+
+@IsInt()
+@ApiProperty({})id: number;
+
+@IsNotEmpty()
+
+@IsDefined()
+
+@IsString()
+@ApiProperty({})email: string;
+
+@IsOptional()
+
+@IsString()
+@ApiProperty({\\"required\\":false})name?: string;
+}
+
+export class CreateUserDto extends OmitType(UserDto, ['id']) {}
+
+export class UpdateUserDto extends PartialType(
+  OmitType(UserDto, ['id'])
+) {}
+
+class WhereDto{
+  
+}
+
+class OrderDto{
+  
+}
+
+export class FilterUserDto {
+  @ApiProperty({ required: false })
+  where?: WhereDto;
+
+  @ApiProperty({ required: false })
+  order?: OrderDto;
+
+  @ApiProperty({ required: false })
+  skip?: number;
+
+  @ApiProperty({ required: false })
+  take?: number;
+}
+"
+`;
+
+exports[`enum generation: User 1`] = `
+"import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
+import {
+        IsNotEmpty,
+IsDefined,
+IsInt,
+IsString,
+IsOptional
+      } from 'class-validator';
+      
+      
+    
+export class UserDto {
+@IsNotEmpty()
+
+@IsDefined()
+
+@IsInt()
+@ApiProperty({})id: number;
+
+@IsNotEmpty()
+
+@IsDefined()
+
+@IsString()
+@ApiProperty({})email: string;
+
+@IsOptional()
+
+@IsString()
+@ApiProperty({\\"required\\":false})name?: string;
+}
+
+export class CreateUserDto extends OmitType(UserDto, ['id']) {}
+
+export class UpdateUserDto extends PartialType(
+  OmitType(UserDto, ['id'])
+) {}
+
+class WhereDto{
+  
+}
+
+class OrderDto{
+  
+}
+
+export class FilterUserDto {
+  @ApiProperty({ required: false })
+  where?: WhereDto;
+
+  @ApiProperty({ required: false })
+  order?: OrderDto;
+
+  @ApiProperty({ required: false })
+  skip?: number;
+
+  @ApiProperty({ required: false })
+  take?: number;
+}
+"
+`;

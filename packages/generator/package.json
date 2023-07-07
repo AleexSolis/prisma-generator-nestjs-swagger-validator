@@ -20,10 +20,13 @@
   "dependencies": {
     "@nestjs/swagger": "^6.2.1",
     "@prisma/client": "3.12.0",
-    "@prisma/generator-helper": "3.12.0",
+    "@prisma/generator-helper": "^3.12.0",
     "@prisma/sdk": "3.12.0",
+    "check-diff-conflicts": "^1.0.3",
     "class-validator": "^0.14.0",
-    "prettier": "2.5.1"
+    "node-diff3": "^3.1.2",
+    "prettier": "2.5.1",
+    "ts-morph": "^18.0.0"
   },
   "devDependencies": {
     "@types/jest": "27.0.3",

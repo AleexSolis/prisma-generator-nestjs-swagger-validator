@@ -1,6 +1,14 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 generator custom_generator {
   provider = "node ../../node_modules/prisma-generator-nestjs-swagger-validator"
   output   = "../types"
+  modules  = true
+  // generatePrismaService = true TODO
+  preventOverwrite = true
+  tempOutput = "./output"
 }
 
 datasource db {
@@ -8,14 +16,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// crud
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  dob   DateTime
+  id    Int       @id @default(autoincrement())
+  /// email
+  email String    @unique
+  /// dateString
+  dob   DateTime?
+  /// positive
+  age  Int?
+  role Role?
+  status String
+
+  /// isDivisibleBy(5)
+  /// max(100)
+  /// isPositive
+  number Int
+
+  /// min(0)
+  /// isNegative
+  otherNumber Int
+
+  /// minDate(1-9-9-9-0-6-1-1) 
+  minDateTest DateTime?
+
+  /// minDate(1999061-1) 
+  minDateTest2 DateTime?
+
+  /// maxDate(1999-0611) 
+  maxDateTest DateTime?
+
+  /// isInstance({"name":"Dario"})
+  isInstancetest Json
 }
 
+/// skip
 model Profile {
   id        Int    @id @default(autoincrement())
+  /// length (3,50)
   firstName String
   lastName  String
   userId    String
@@ -38,4 +76,9 @@ enum Language {
   Go
   Python
   Cpp
+}
+
+enum Role {
+  CLIENT
+  ADMIN
 }
