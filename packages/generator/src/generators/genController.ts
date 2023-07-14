@@ -1,5 +1,5 @@
 export const genController = (modelName: string): string => {
-  const modelNameLower = modelName.toLowerCase();
+  const modelNameLower = modelName[0].toLowerCase() + modelName.slice(1);
   return `
         import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
         import { ApiResponse, ApiTags } from '@nestjs/swagger';

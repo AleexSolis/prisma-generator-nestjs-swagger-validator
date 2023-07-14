@@ -1,5 +1,6 @@
 export const genService = (modelName: string): string => {
-  const modelNameLower = modelName.toLowerCase();
+  const modelNameLower = modelName[0].toLowerCase() + modelName.slice(1);
+
   return `
       import { Injectable } from '@nestjs/common';
       import { Prisma } from '@prisma/client';
