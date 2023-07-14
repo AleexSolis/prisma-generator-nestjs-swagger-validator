@@ -35,9 +35,15 @@ export class Filter${table.name}Dto {
   order?: OrderDto;
 
   @ApiProperty({ required: false })
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
   skip?: number;
 
   @ApiProperty({ required: false })
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
   take?: number;
 }
 `;

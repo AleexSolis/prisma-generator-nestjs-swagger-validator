@@ -112,7 +112,7 @@ function getImportStatements(imports: Set<string>, importSource: string) {
 
 export function getImports(fields: Array<Field>) {
   const prismaImports = new Set<string>();
-  const CVImports = new Set<string>();
+  const CVImports = new Set<string>(['IsOptional', 'IsInt', 'IsPositive']);
   const dtoImports = new Set<string>();
 
   fields.forEach((field) => {
